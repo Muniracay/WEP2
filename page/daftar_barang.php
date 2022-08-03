@@ -1,7 +1,7 @@
 <?php
-$query = "SELECT * FROM tbl_barang where deleted_at is null order by id_barang Desc";
+$query = "SELECT * FROM tbl_barang b LEFT JOIN tbl_operator o ON b.id_operator=o.id_operator where b.deleted_at is null order by id_barang Desc";
 
-$data = $koneksi->query($query);
+$data = $koneksi->query($query)or die($koneksi->error);
 
 // print_r($data);
 ?>
@@ -9,7 +9,9 @@ $data = $koneksi->query($query);
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Daftar Barang</h3>
+            <h3 class="card-title">
+                <button class="btn btn-success" onclick="window.location='http://localhost/wpb_inventori/index.php?hal=tambah_barang'">Tambah</button>
+            </h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -36,7 +38,7 @@ $data = $koneksi->query($query);
                                 <td><?=$value['nama_barang'];?></td>
                                 <td><?=$value['harga_barang'];?></td>
                                 <td><?=$value['satuan'];?></td>
-                                <td><?=$value['id_operator'];?></td>
+                                <td><?=(isset($value->nama_operator)?$value->nama_operator:'ADMIN');?></td>
                                 <td>
                                     
                                     <a href="index.php?hal=edit_barang&id=<?=$value['id_barang'];?>" class="btn btn-sm bg-gradient-primary">

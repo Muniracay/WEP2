@@ -1,25 +1,23 @@
 <?php 
 include("conn.php");
-$query = "SELECT * FROM tbl_barang_keluar  
-INNER JOIN tbl_barang ON tbl_barang_keluar.id_barang=tbl_barang.id_barang 
-AND tbl_barang_keluar.deleted_at 
-IS null ORDER BY tbl_barang_keluar.id_barang_keluar desc";
-$data = $koneksi->query($query);
+
+$data = $koneksi->query("SELECT m.id_barang_keluar, m.qty_keluar, b.kode_barang, b.nama_barang, b.satuan, o.nama_operator, m.created_at FROM tbl_barang_keluar m INNER JOIN tbl_barang b ON m.id_barang=b.id_barang LEFT JOIN tbl_operator o ON m.id_operator=o.id_operator WHERE b.deleted_at IS null
+ORDER BY m.id_barang_keluar desc")or die($koneksi->error);
 
 // print_r($data);
 ?>
 <div class="col-12">
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Daftar Barang keluar</h3>
+        <h3 class="card-title">Daftar Barang Keluar</h3>
     </div>
 
     <div class="card-body">
-        <table id="example2" class="table table-bordered table-striped">
+        <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Tgl. keluar</th>
+                    <th>Tgl. Keluar</th>
                     <th>Barang</th>
                     <th>Satuan</th>
                     <th>QTY</th>
@@ -30,17 +28,17 @@ $data = $koneksi->query($query);
             <tbody>
                 <?php
                     $no=1;
-                    while($value = $data->fetch_array()){
+                    while($value = $data->fetch_object()){
                         ?>
                             <tr>
                                 <td><?=$no;?></td>
-                                <td><?=$value['created_at'];?></td>
-                                <td><?=$value['kode_barang'];?>-<?=$value['nama_barang'];?></td>
-                                <td><?=$value['satuan'];?></td>
-                                <td><?=$value['qty_keluar'];?></td>
-                                <td><?=null;?></td>
+                                <td><?=$value->created_at;?></td>
+                                <td><?=$value->kode_barang;?>-<?=$value->nama_barang;?></td>
+                                <td><?=$value->satuan;?></td>
+                                <td><?=$value->qty_keluar;?></td>
+                                <td><?=(isset($value->nama_operator)?$value->nama_operator:'ADMIN');?></td>
                                 <td>
-                                    <a href="index.php?hal=hapus_barang_keluar&id=<?=$value['id_barang_keluar'];?>" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Hapus</a>
+                                    <a href="index.php?hal=hapus_barang_keluar&id=<?=$value->id_barang_keluar;?>" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i> Hapus</a>
                                 </td>
                             </tr>
                         <?php
@@ -54,7 +52,7 @@ $data = $koneksi->query($query);
             <tfoot>
                 <tr>
                     <th>#</th>
-                    <th>Tgl. Masuk</th>
+                    <th>Tgl. Keluar</th>
                     <th>Barang</th>
                     <th>Satuan</th>
                     <th>QTY</th>

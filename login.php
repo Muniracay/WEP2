@@ -1,61 +1,62 @@
 <?php
-include 'conn.php';
- 
-error_reporting(0);
- 
 session_start();
- 
-if (isset($_SESSION['username'])) {
-    header("Location: index.php");
-}
- 
-if (isset($_POST['submit'])) {
-    $username = $_POST['username'];
-    $password = md5($_POST['password']);
- 
-    $sql = "SELECT * FROM tbl_operator WHERE username='$username' AND password='$password'";
-    $result = $koneksi->query($sql);
-    if ($result->num_rows > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['username'] = $row['username'];
-        header("Location: index.php");
-    } else {
-        echo "<script>alert('Username atau password Anda salah. Silahkan coba lagi!')</script>";
-    }
-}
- 
-?>
+if(isset($_SESSION['login'])){
 
+    header("location: http://localhost/wpb_inventori/index.php?hal=home");
+}
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WP 2 | TI6B</title>
+    <title>Log in | Operator</title>
 
-    <!-- Google Font: Source Sans Pro -->
+    <base href="http://localhost/wpb_inventori/">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
 
-    <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
 
-    <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="./plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
+    <link rel="stylesheet" href="./dist/css/adminlte.min.css?v=3.2.0">
 </head>
 
-<body class="login-page" style="min-height: 497.390625px;">
+<body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <b>WP 2 </b>INVENTORY
+            <a href="./index2.html"><b>Operator</b> Login</a>
         </div>
+
+        <?php if (isset($_POST['submit'])) : ?>
+
+            <?php
+            include("conn.php");
+            $username = $_POST['username'];
+            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+            $data = $koneksi->query("SELECT * from tbl_operator where username='$username'") or die($koneksi->error);
+            //pakai password verifi
+            if ($data->num_rows > 0) {
+                $_SESSION["login"] = $data->fetch_assoc();
+                if(password_verify($_POST['password'], $_SESSION["login"]['password'])){
+                    
+                echo "<script>alert('login berhasil'); window.location = './index.php?hal=home';</script>";
+                }else{
+                    echo "<script>alert('login gagal');</script>";
+                }
+            } else {
+                echo "<script>alert('login gagal');</script>";
+            }
+            ?>
+
+        <?php endif; ?>
 
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-                <form action="login.php" method="post">
+                <form action="" method="post">
                     <div class="input-group mb-3">
                         <input name="username" type="text" class="form-control" placeholder="Username">
                         <div class="input-group-append">
@@ -89,17 +90,17 @@ if (isset($_POST['submit'])) {
                     </div>
                 </form>
 
-                <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p>
-                <p class="mb-0">
-                    <a href="contact_admin.html" class="text-center">Register By Admin</a>
-                </p>
             </div>
 
         </div>
     </div>
 
+
+    <script src="./plugins/jquery/jquery.min.js"></script>
+
+    <script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./dist/js/adminlte.min.js?v=3.2.0"></script>
 </body>
 
 </html>

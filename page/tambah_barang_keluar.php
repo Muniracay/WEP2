@@ -33,7 +33,7 @@ if(isset($_POST['simpan'])){
 
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Tambah Barang keluar</h3>
+            <h3 class="card-title">Tambah Barang Keluar</h3>
         </div>
 
         <form method="post" action="">

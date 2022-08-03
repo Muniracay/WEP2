@@ -1,22 +1,10 @@
 <?php
-
 session_start();
- 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-}
-
 include("conn.php");
-
-$queryProfile = "SELECT id_operator,
-        nama_operator,
-        username,
-        email,
-        DATE_FORMAT(created_at,'%d %M %Y') as register_date
-    FROM tbl_operator 
-        WHERE username='".$_SESSION['username']."'";
-    $dataProfile = $koneksi->query($queryProfile);
-    $profile = $dataProfile->fetch_object()
+//jika belum login alihkan ke halaman logout
+if(!isset($_SESSION['login'])){
+    header("location: http://localhost/wpb_inventori/login.php");
+}
 ?>
 
 
@@ -31,6 +19,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WP 2 | TI6B</title>
+    <!-- jQuery -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -203,7 +193,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Halaman Awal</h1>
+                            <h1 class="m-0"><?=str_replace("_"," ",strtoupper(@$_GET['hal']));?></h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -251,8 +241,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- REQUIRED SCRIPTS -->
 
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 

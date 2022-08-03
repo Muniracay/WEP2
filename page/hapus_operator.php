@@ -8,7 +8,7 @@
     // echo $satuan;
     // query insert 
     $tgl = date('Y-m-d H:i:s', time());
-    // query untuk melakukan insert data ke dalam tabel barang
+    // query untuk melakukan insert data ke dalam tabel operator
     $query = "UPDATE tbl_operator set deleted_at='$tgl' where id_operator = '$id'";
     
     $hapus = $koneksi->query($query);
